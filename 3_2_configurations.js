@@ -1,7 +1,7 @@
 // control via api - configurations
 module.exports = {
     casual: {
-        references_versions_configuration: '1.0',
-        log_level: '3'
+        references_configuration: '1.0', // ai_version
+        log_level: '5' // 6 for every tick event
     }
 };

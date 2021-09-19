@@ -1,9 +1,11 @@
 // control via api - set up
 //
 // To set up external control you can:
-module.exports = (configurations, references, interfaces, notifications) => {
+module.exports = function set_up (configurations, references, apis) {
 // - set another configuration
-    references(configurations.casual).ai_priorities.run(); //(configurations.casual);
+    var ai = references(configurations.casual);
+    ai.logger.log('ai initialized');
+    return ai; //(configurations.casual);
 // - register one-time commands, goals, and state via interfaces
 // --- eg.:
 //  interfaces.register([
