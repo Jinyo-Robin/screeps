@@ -1,14 +1,3 @@
-var GLOBALS = {
-	workerscap: 3,
-	GUI: true,
-	visionClaim: 3,
-	visionUpgrade: 1, // 0 is not at all (degrading), 1 is standard, 2 is extra,
-	visionCollectEnergyResourcesDroplets: 2, // 0 is full stop of collecting, transferring and building, 1 is standard, 2 is energyDroplets overflow
-	energyResourcesDropped : 0,
-	energyResourcesAmount : 0,
-	energyResourcesCap : 0
-};
-
 // population
 module.exports = function population (population_version) {
     if (population_version == '1.0') {
@@ -26,7 +15,7 @@ module.exports = function population (population_version) {
                 // Claimers
                 var biggestClaimer =			800;
                 var amountOfClaimers =			_.filter(Game.creeps, creep => creep.memory.job == 'claimer').length;
-                var desiredClaimers =			GLOBALS.visionClaim * Memory.tasks.filter(n => n.job == 'claimer').length;
+                var desiredClaimers =			ai.state.visionClaim * Memory.tasks.filter(n => n.job == 'claimer').length;
                 var enoughClaimers =			amountOfClaimers >= desiredClaimers;
                 // Attackers
                 var amountOfGrunters = 			_.filter(Game.creeps, creep => creep.memory.job == 'grunter').length;
@@ -39,16 +28,16 @@ module.exports = function population (population_version) {
                 var enoughHarvesters =			amountOfHarvesters >= desiredHarvesters;
                 // Upgraders
                 var amountOfUpgraders =			_.filter(Game.creeps, creep => creep.memory.job == 'upgrader').length;
-                var desiredUpgraders =			GLOBALS.visionUpgrade * Math.ceil(desiredHarvesters/2);
-                var limitedDesiredUpgraders =	GLOBALS.visionUpgrade * Math.ceil(amountOfHarvesters/2);
+                var desiredUpgraders =			ai.state.visionUpgrade * Math.ceil(desiredHarvesters/2);
+                var limitedDesiredUpgraders =	ai.state.visionUpgrade * Math.ceil(amountOfHarvesters/2);
                 var enoughUpgraders =			amountOfUpgraders >= limitedDesiredUpgraders;
                 // Workers
                 var amountOfWorkers =			_.filter(Game.creeps, creep => creep.memory.job != 'harvester' && creep.memory.job != 'upgrader').length;
-                var desiredWorkers =			GLOBALS.visionCollectEnergyResourcesDroplets * Math.ceil((desiredHarvesters + desiredUpgraders)/2);
+                var desiredWorkers =			ai.state.visionCollectEnergyResourcesDroplets * Math.ceil((desiredHarvesters + desiredUpgraders)/2);
                 var enoughWorkers =				amountOfWorkers >= desiredWorkers;
-                GLOBALS.workerscap =			desiredHarvesters + desiredUpgraders + desiredWorkers;
+                ai.state.workerscap =			desiredHarvesters + desiredUpgraders + desiredWorkers;
                 // Spawn1
-                // ToDo: check is spawn is not busy
+                // ToDo: check if spawn is not busy
                 if(!enoughClaimers && (fullEnergy && Game.spawns['Spawn1'].room.energyAvailable >= 750 || Game.spawns['Spawn1'].room.energyAvailable >= biggestClaimer)) {
                     var newName = 'Claimer' + Game.time;
                     console.log('Spawning new Claimer: ' + newName);
@@ -68,7 +57,7 @@ module.exports = function population (population_version) {
                     Game.spawns['Spawn1'].spawnCreep([...Array( 2).fill(WORK),...Array( 1).fill(MOVE)], newName, {memory: {job: 'harvester'}}); // RCL 1 (300)
                 } else if(!amountOfWorkers && Game.spawns['Spawn1'].room.energyAvailable >= 250 || !enoughWorkers && fullEnergy) {
                     var newName = 'Worker' + Game.time;
-                    // console.log('Spawning new Worker: ' + newName);
+                    console.log('Spawning new Worker: ' + newName);
                     Game.spawns['Spawn1'].spawnCreep([...Array( 1).fill(WORK),...Array(16).fill(CARRY),...Array(17).fill(MOVE)], newName, {memory: {job: 'freebee'}});
                     Game.spawns['Spawn1'].spawnCreep([...Array( 1).fill(WORK),...Array(15).fill(CARRY),...Array(16).fill(MOVE)], newName, {memory: {job: 'freebee'}});
                     Game.spawns['Spawn1'].spawnCreep([...Array( 1).fill(WORK),...Array(14).fill(CARRY),...Array(15).fill(MOVE)], newName, {memory: {job: 'freebee'}});

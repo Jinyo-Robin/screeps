@@ -1,13 +1,3 @@
-var GLOBALS = {
-	workerscap: 3,
-	GUI: true,
-	visionClaim: 3,
-	visionUpgrade: 1, // 0 is not at all (degrading), 1 is standard, 2 is extra,
-	visionCollectEnergyResourcesDroplets: 2, // 0 is full stop of collecting, transferring and building, 1 is standard, 2 is energyDroplets overflow
-	energyResourcesDropped : 0,
-	energyResourcesAmount : 0,
-	energyResourcesCap : 0
-};
 var icons = {
 	freebee: ' ❓️ freebee:',
 	collector: '🔄 collect',

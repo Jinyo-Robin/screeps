@@ -10,6 +10,10 @@ module.exports = function ai_priorities (ai_priorities_version) {
 
             // ====================
             // --byVision-priority-- (emergency)
+            // --> goals, trends, KPIs to be expanded and optimized
+            // --> passion, believe and mutual mission to be promoted
+            // --> the why and what for
+            // --> hopes and fears
             // ====================
 
             // KPIs (ai.state.energy*) for vision-priority decision-making
@@ -52,6 +56,9 @@ module.exports = function ai_priorities (ai_priorities_version) {
 
             // ====================
             // --byStrategy-- (diplomacy) (mostly outside of visible rooms)
+            // --> prehensible milestones and targets
+            // --> potential resources to be utilized
+            // --> mostly flag controlled
             // ====================
 
             // repairDefence
@@ -59,7 +66,7 @@ module.exports = function ai_priorities (ai_priorities_version) {
 
             // claim
             var controllerClaim = [];
-            if (ai.state.visionClaim) {
+            if (ai.state.visionClaim) { // currently always 3
                 for ( var controllerFlag of _.filter( Game.flags, n => n.color == COLOR_CYAN ) ) {
                     controllerClaim = [
                         ...controllerClaim,
@@ -178,6 +185,7 @@ module.exports = function ai_priorities (ai_priorities_version) {
 
             // ====================
             // --byTactic-- (rooms) (inside of visible area)
+            // --> already utilized resources to be put to use
             // ====================
 
             var transferEnergyStorage = []; // job: transferrer
