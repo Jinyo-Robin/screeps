@@ -58,7 +58,7 @@ module.exports = function ai_priorities (ai_priorities_version) {
             // --byStrategy-- (diplomacy) (mostly outside of visible rooms)
             // --> prehensible milestones and targets
             // --> potential resources to be utilized
-            // --> mostly flag controlled
+            // --> mostly flag controlled and structures
             // ====================
 
             // repairDefence
@@ -115,7 +115,9 @@ module.exports = function ai_priorities (ai_priorities_version) {
                         ?
                         sourceFlag.pos.findInRange(FIND_SOURCES, 1)[0]
                         :
-                        {id: '', pos: sourceFlag.pos}]];
+                        {id: '', pos: sourceFlag.pos}
+                    ]
+                ];
             }
             harvestEnergySources = harvestEnergySources.filter(n => n);
 
@@ -186,38 +188,66 @@ module.exports = function ai_priorities (ai_priorities_version) {
             // ====================
             // --byTactic-- (rooms) (inside of visible area)
             // --> already utilized resources to be put to use
+            // --> creep and creep-team self-management around flags and structures
             // ====================
 
-            var transferEnergyStorage = []; // job: transferrer
-            var transferEnergyResourceContainers = []; // job: transferrer
-            var collectEnergyResources = []; // job: collector
-            var collectEnergyDeposits = []; // job: collector
-            var collectEnergyResourcesContainers = []; // job: collector
-            var collectEnergyStorage = []; // job: collector
+            // energy logistics
+            var transferEnergyStorage = [];             // job: transferrer
+            var transferEnergyResourceContainers = [];  // job: transferrer
+            var collectEnergyResources = [];            // job: collector
+            var collectEnergyDeposits = [];             // job: collector
+            var collectEnergyResourcesContainers = [];  // job: collector
+            var collectEnergyStorage = [];              // job: collector
 
-            // alot here may be found with Game.structures in a better way
+            // a lot here may be found with Game.structures in a better way
             for(var hashKey in Game.rooms) { // all Rooms with owned buildings or creeps (activeRooms)
                 var activeRoom = Game.rooms[hashKey];
                 // job: transferrer
-                transferEnergyStorage = [...transferEnergyStorage, ...activeRoom.find(FIND_MY_STRUCTURES, { filter: n =>
-                    (n.structureType == STRUCTURE_EXTENSION || n.structureType == STRUCTURE_SPAWN) &&
-                    n.store.getFreeCapacity(RESOURCE_ENERGY)})];
-                transferEnergyResourceContainers = [...transferEnergyResourceContainers, ...activeRoom.find(FIND_STRUCTURES, { filter: n =>// should be checked in all safeRooms (active and resource)
-                    n.structureType == STRUCTURE_CONTAINER &&
-                    n.store.getFreeCapacity(RESOURCE_ENERGY)})];
+                transferEnergyStorage = [
+                    ...transferEnergyStorage,
+                    ...activeRoom.find(FIND_MY_STRUCTURES, { filter: n =>
+                        ( n.structureType == STRUCTURE_EXTENSION || n.structureType == STRUCTURE_SPAWN) &&
+                          n.store.getFreeCapacity(RESOURCE_ENERGY)})
+                    ];
+                transferEnergyResourceContainers = [
+                    ...transferEnergyResourceContainers,
+                    // should be checked in all safeRooms (active and resource)
+                    ...activeRoom.find(FIND_STRUCTURES, { filter: n =>
+                        n.structureType == STRUCTURE_CONTAINER &&
+                        n.store.getFreeCapacity(RESOURCE_ENERGY)})
+                    ];
                 // job: collector
-                collectEnergyResources = [...collectEnergyResources, ...activeRoom.find(FIND_DROPPED_RESOURCES, { filter: n => // should be extended (scout) to more rooms to gather fallen comrades
-                    n.energy})];
-                collectEnergyResourcesContainers = [...collectEnergyResourcesContainers, ...activeRoom.find(FIND_STRUCTURES, { filter: n =>
-                    n.structureType == STRUCTURE_CONTAINER &&
-                    n.store[RESOURCE_ENERGY]})];
-                collectEnergyStorage = [...collectEnergyStorage, ...activeRoom.find(FIND_MY_STRUCTURES, { filter: n => // should be checked in active rooms
-                    (n.structureType == STRUCTURE_EXTENSION || n.structureType == STRUCTURE_SPAWN) &&
-                    n.store[RESOURCE_ENERGY]})];
-                collectEnergyDeposits = [...collectEnergyDeposits, ...activeRoom.find(FIND_TOMBSTONES, { filter: n => // should be extended to more rooms to gather fallen comrades
-                    n.store[RESOURCE_ENERGY]})];
-                collectEnergyDeposits = [...collectEnergyDeposits, ...activeRoom.find(FIND_RUINS, { filter: n => // should be extended to more rooms to gather fallen comrades
-                    n.store[RESOURCE_ENERGY]})];
+                collectEnergyResources = [
+                    ...collectEnergyResources,
+                    // should be extended (scout) to more rooms to gather fallen comrades
+                    ...activeRoom.find(FIND_DROPPED_RESOURCES, { filter: n =>
+                        n.energy})
+                    ];
+                collectEnergyResourcesContainers = [
+                    ...collectEnergyResourcesContainers,
+                    ...activeRoom.find(FIND_STRUCTURES, { filter: n =>
+                        n.structureType == STRUCTURE_CONTAINER &&
+                        n.store[RESOURCE_ENERGY]})
+                    ];
+                collectEnergyStorage = [
+                    ...collectEnergyStorage,
+                    // should be checked in active rooms
+                    ...activeRoom.find(FIND_MY_STRUCTURES, { filter: n =>
+                        ( n.structureType == STRUCTURE_EXTENSION || n.structureType == STRUCTURE_SPAWN ) &&
+                          n.store[RESOURCE_ENERGY]})
+                    ];
+                collectEnergyDeposits = [
+                    ...collectEnergyDeposits,
+                    // should be extended to more rooms to gather fallen comrades
+                    ...activeRoom.find(FIND_TOMBSTONES, { filter: n =>
+                        n.store[RESOURCE_ENERGY]})
+                    ];
+                collectEnergyDeposits = [
+                    ...collectEnergyDeposits,
+                    // should be extended to more rooms to gather fallen comrades
+                    ...activeRoom.find(FIND_RUINS, { filter: n =>
+                        n.store[RESOURCE_ENERGY]})
+                    ];
             }
 
             // ====================
@@ -225,7 +255,7 @@ module.exports = function ai_priorities (ai_priorities_version) {
             // ====================
 
             // job for an attack leader missing (for a group. the strongest creep with most health, attack and life time, to focus attack and to let weak attackers heal up)
-            // jobs for attacke missing (dying of age creeps go kamikaze, grunters become attackers as a group if the enemy is weak)
+            // jobs for attacker missing (dying of age creeps go kamikaze, grunters become attackers as a group if the enemy is weak)
             // jobs for defender missing (going all in if the enemy attacks, also calling for help if needed)
             for(var n of transferEnergyStorage) {
                 Memory.tasks = [...Memory.tasks, ...[{
@@ -330,7 +360,8 @@ module.exports = function ai_priorities (ai_priorities_version) {
                     ref: n}]];
             }
             for(var n of controllerClaim) {
-                var priorityFlag = n.room && n.pos.lookFor(LOOK_FLAGS).toString() != '' && n.pos.lookFor(LOOK_FLAGS)[0].color == COLOR_CYAN ?
+                var priorityFlag =
+                    ( n.room && n.pos.lookFor(LOOK_FLAGS).toString() != '' && n.pos.lookFor(LOOK_FLAGS)[0].color == COLOR_CYAN ) ?
                     100 * (10 - parseInt(n.pos.lookFor(LOOK_FLAGS)[0].name, 10)) :
                     400;
                 Memory.tasks = [...Memory.tasks, ...[{

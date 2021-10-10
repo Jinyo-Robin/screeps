@@ -22,96 +22,49 @@ module.exports = (gui_elements_version) => {
             if(ai.state.GUI) {
                 var tablePosition = {x: 1, y: 2};
                 var tableWidths = [4, 2, 7];
+                var tableOpacity = configuration.gui_elements.opacity * 0.3;
                 Memory.tasks.sort((a, b) => b.priority - a.priority);
                     Game.spawns['Spawn1'].room.visual.text(
                         'job ' + Memory.tasks.length,
                             tablePosition.x,
                             tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         'prio',
                             tablePosition.x + tableWidths[0],
                             tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         'pos',
                             tablePosition.x + tableWidths[0] + tableWidths[1],
                             tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         'ref',
                             tablePosition.x + tableWidths[0] + tableWidths[1] + tableWidths[2],
                             tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                 for(var nr in Memory.tasks){
                     Game.spawns['Spawn1'].room.visual.text(
                         Memory.tasks[nr].job,                                   // job
                             tablePosition.x,
                             tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         Math.floor(Memory.tasks[nr].priority),                  // prio
                             tablePosition.x + tableWidths[0] + tableWidths[1] -1,
                             tablePosition.y + parseInt(nr),
-                            {align: 'right', opacity: configuration.gui_elements.opacity});
+                            {align: 'right', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         Memory.tasks[nr].ref.pos.toString().substring(6,25),    // pos
                             tablePosition.x + tableWidths[0] + tableWidths[1],
                             tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                     Game.spawns['Spawn1'].room.visual.text(
                         Memory.tasks[nr].ref.toString().substring(0,25),        //ref
                             tablePosition.x + tableWidths[0] + tableWidths[1] + tableWidths[2],
                             tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                }
-            }
-
-            // jobs list ("Black Board")
-            if(ai.state.GUI) {
-                var tablePosition = {x: 1, y: 32};
-                var tableWidths = [4, 2, 7];
-                    Game.spawns['Spawn1'].room.visual.text(
-                        'job ' + Memory.tasks.length,
-                            tablePosition.x,
-                            tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        'prio',
-                            tablePosition.x + tableWidths[0],
-                            tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        'pos',
-                            tablePosition.x + tableWidths[0] + tableWidths[1],
-                            tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        'ref',
-                            tablePosition.x + tableWidths[0] + tableWidths[1] + tableWidths[2],
-                            tablePosition.y -1,
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                for(var nr in Memory.tasks){
-                    Game.spawns['Spawn1'].room.visual.text(
-                        Memory.tasks[nr].job,                                   // job
-                            tablePosition.x,
-                            tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        Math.floor(Memory.tasks[nr].priority),                  // prio
-                            tablePosition.x + tableWidths[0] + tableWidths[1] -1,
-                            tablePosition.y + parseInt(nr),
-                            {align: 'right', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        Memory.tasks[nr].ref.pos.toString().substring(6,25),    // pos
-                            tablePosition.x + tableWidths[0] + tableWidths[1],
-                            tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
-                    Game.spawns['Spawn1'].room.visual.text(
-                        Memory.tasks[nr].ref.toString().substring(0,25),        //ref
-                            tablePosition.x + tableWidths[0] + tableWidths[1] + tableWidths[2],
-                            tablePosition.y + parseInt(nr),
-                            {align: 'left', opacity: configuration.gui_elements.opacity});
+                            {align: 'left', opacity: tableOpacity});
                 }
             }
 
