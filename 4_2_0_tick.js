@@ -1,4 +1,9 @@
 // internals - tick
+
+// this module triggers all events that have to happen per tick
+
+// ToDo: early tick and late tick events
+
 module.exports = (tick_version) => {
     if (tick_version == "1.0") { return (configuration, dependencies, ai) => { return {
         run: function tick () {

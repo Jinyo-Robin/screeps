@@ -1,4 +1,7 @@
 // ai priorities
+
+// this module identifies all tasks, KPIs and targets and prioritises them depending on current configuration
+
 module.exports = function ai_priorities (ai_priorities_version) {
     if (ai_priorities_version == '1.0') { return (configuration, externals, ai) => { return {
         // visions: survival, expansion, cost reduction, relocation, destruction
