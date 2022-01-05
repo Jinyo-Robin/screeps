@@ -1,4 +1,7 @@
 // population roles
+
+// to get a creep in console, use: for(var name in Game.creeps) { console.log(Game.creeps[name]) };
+
 module.exports = function jobs (jobs_version) {
     if (jobs_version == '1.0') {
         return (configuration, externals, ai) => { return {
@@ -98,7 +101,8 @@ module.exports = function jobs (jobs_version) {
                     var myPrio = 0;
                     if(transferrerTasks.length){
                         var myDistance = transferrerTasks[0].ref.pos.getRangeTo(creep);
-                        myPrio = transferrerTasks[0].priority - myDistance; // maybe add a prioFlag to ignore distance for outposts
+                        myPrio = transferrerTasks[0].priority - myDistance; // ToDo: maybe add a prioFlag to ignore distance for outposts
+                        // reserve the task so no other creep can take it this tick
                         if(!(transferrerTasks[0].ref.store.getFreeCapacity(RESOURCE_ENERGY) - creep.store[RESOURCE_ENERGY])){
                             Memory.tasks.splice(Memory.tasks.indexOf(transferrerTasks[0]), 1);
                         }
